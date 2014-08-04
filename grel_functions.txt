@@ -1,0 +1,165 @@
+if(
+  length(value.parseJson()["records"])>1,
+  "Multiple Records",
+  with(
+    filter(value.parseJson()["records"][0]["sameAs"],v,v["namespace"]=="issn"), 
+    issns,
+    if(length(issns)>1,"Multiple ISSNs: ","") + forEach(issns,v,v["identifier"]).join(",")
+    )
+  )
+)
+
+
+//this gets a multi-element array with empty strings
+forEach(
+	value.parseJson()["response"]["results"]["candidates"][0]["officials"],
+	official,
+	with(
+		official["office"]["district"]["district_id"],
+		d_id,
+			if(
+				d_id!="AT LARGE",
+				official["last_name"],
+				""
+			)
+	)
+)
+
+//gets array of district id's
+forEach(
+	value.parseJson()["response"]["results"]["candidates"][0]["officials"],
+	official,
+	official["office"]["district"]["district_id"]
+)
+
+with(
+forEach(
+	value.parseJson()["response"]["results"]["candidates"][0]["officials"],
+	official,
+	official["office"]["district"]["district_id"]
+),
+district_array,
+if(
+d_array[0]!="AT LARGE",
+
+)
+)
+
+//gets the district_id of the one non-at-large rep
+with(
+	filter(
+		forEach(
+			value.parseJson()["response"]["results"]["candidates"][0]["officials"],
+			official,
+			with(
+				official["office"]["district"]["district_id"],
+				d_id,
+				if(
+					d_id!="AT LARGE",
+					official["office"]["district"]["district_id"],
+					""
+				)
+			)
+		),
+		l_name,
+		l_name!=""
+	),
+	a,
+	a[0]
+)
+
+
+//this gets the last name but as a one-element array
+filter(
+	forEach(
+		value.parseJson()["response"]["results"]["candidates"][0]["officials"],
+		official,
+		with(
+			official["office"]["district"]["district_id"],
+			d_id,
+			if(
+				d_id!="AT LARGE",
+				official["last_name"],
+				""
+			)
+		)
+	),
+	l_name,
+	l_name!=""
+)
+
+//this gets just the last name of the one non-at-large councilperson
+with(
+	filter(
+		forEach(
+			value.parseJson()["response"]["results"]["candidates"][0]["officials"],
+			official,
+			with(
+				official["office"]["district"]["district_id"],
+				d_id,
+				if(
+					d_id!="AT LARGE",
+					official["last_name"],
+					""
+				)
+			)
+		),
+		l_name,
+		l_name!=""
+	),
+	a,
+	a[0]
+)
+
+//this concatenates the first and last names
+with(
+	with(
+		filter(
+			forEach(
+				value.parseJson()["response"]["results"]["candidates"][0]["officials"],
+				official,
+				with(
+					official["office"]["district"]["district_id"],
+					d_id,
+					if(
+						d_id!="AT LARGE",
+						official["first_name"],
+						""
+					)
+				)
+			),
+			f_name,
+			f_name!=""
+		),
+		first_names,
+		first_names[0]
+	),
+	first,
+	first + " " + with(
+		filter(
+			forEach(
+				value.parseJson()["response"]["results"]["candidates"][0]["officials"],
+				official,
+				with(
+					official["office"]["district"]["district_id"],
+					d_id,
+					if(
+						d_id!="AT LARGE",
+						official["last_name"],
+						""
+					)
+				)
+			),
+			l_name,
+			l_name!=""
+		),
+		last_names,
+		last_names[0]
+	)
+)
+
+
+
+value.parseJson()["response"]["results"]["candidates"][0]["officials"][0]["last_name"]
+
+value.parseJson()["response"]["results"]["candidates"][0]["officials"][0]["office"]["district"]["district_id"]
